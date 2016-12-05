@@ -1,0 +1,6 @@
+same contents as original array1
+
+The contents of array 2 is assigned the same value as array 1 using the each method.
+array1's value is modified so that all values startign with C are capitalized
+
+puts prints the contents of array 2 - which remain unchained as the contents of array 1 were changed

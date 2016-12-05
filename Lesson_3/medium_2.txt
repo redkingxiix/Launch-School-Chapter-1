@@ -1,0 +1,173 @@
+1)Hashes are commonly found to be more complex than the simple one we saw earlier:
+
+ages = { "Herman" => 32, "Lily" => 30, "Grandpa" => 402, "Eddie" => 10 }
+It is often the case that each key points to another hash instead of a single value:
+
+munsters = {
+  "Herman" => { "age" => 32, "gender" => "male" },
+  "Lily" => { "age" => 30, "gender" => "female" },
+  "Grandpa" => { "age" => 402, "gender" => "male" },
+  "Eddie" => { "age" => 10, "gender" => "male" }
+}
+Figure out the total age of just the male members of the family.
+
+
+1)  munsters = {
+    "Herman" => { "age" => 32, "gender" => "male" },
+    "Lily" => { "age" => 30, "gender" => "female" },
+    "Grandpa" => { "age" => 402, "gender" => "male" },
+    "Eddie" => { "age" => 10, "gender" => "male" }
+  }
+ 
+  def average_male_age(munster_hash)
+    total_age = 0
+    munster_hash.each do |k,_|
+      case munster_hash[k]["gender"]
+      when "male"
+        total_age+= munster_hash[k]["age"]
+      when "female"
+        next
+      end
+    end
+    total_age
+  end
+ 
+  p average_male_age(munsters)
+
+  #correction:
+  total_male_age = 0
+  munsters.each do |name, details|
+  total_male_age += details["age"] if details["gender"] == "male"
+end
+
+2) One of the most frequently used real-world string properties is that of "string substitution", where we take a hard-coded string and modify it with various parameters from our program.
+
+Given this previously seen family hash, print out the name, age and gender of each family member:
+
+munsters = {
+  "Herman" => { "age" => 32, "gender" => "male" },
+  "Lily" => { "age" => 30, "gender" => "female" },
+  "Grandpa" => { "age" => 402, "gender" => "male" },
+  "Eddie" => { "age" => 10, "gender" => "male" },
+  "Marilyn" => { "age" => 23, "gender" => "female"}
+}
+...like this:
+
+(Name) is a (age) year old (male or female).
+
+A)   munsters = {
+    "Herman" => { "age" => 32, "gender" => "male" },
+    "Lily" => { "age" => 30, "gender" => "female" },
+    "Grandpa" => { "age" => 402, "gender" => "male" },
+    "Eddie" => { "age" => 10, "gender" => "male" },
+    "Marilyn" => { "age" => 23, "gender" => "female"}
+  }
+ 
+ 
+ 
+  def print_munster(munster)
+    munster.each do |name, details|
+      p "#{name} is a #{details["age"]} #{details["gender"]}"
+    end
+  end
+ 
+  print_munster(munsters)
+
+3)  In an earlier exercise we saw that depending on variables to be modified by called methods can be tricky:
+
+def tricky_method(a_string_param, an_array_param)
+  a_string_param += "rutabaga"
+  an_array_param << "rutabaga"
+end
+
+my_string = "pumpkins"
+my_array = ["pumpkins"]
+tricky_method(my_string, my_array)
+
+puts "My string looks like this now: #{my_string}"
+puts "My array looks like this now: #{my_array}"
+We learned that whether the above "coincidentally" does what we think we wanted "depends" upon what is going on inside the method.
+
+How can we refactor this exercise to make the result easier to predict and easier for the next programmer to maintain?
+
+A) It would be better to split the method into two as one method should only be doing one thing at a time.
+Currently the method only mutates the array as it is the last variable in the method.
+
+def tricky_method_string(string)
+  string+= "rutabaga"
+end
+
+def trick_method_array(array)
+  array << "rutabaga"
+end
+
+#correction   
+
+def not_so_tricky_method(a_string_param, an_array_param)
+  a_string_param += "rutabaga"
+  an_array_param += ["rutabaga"]
+
+  return a_string_param, an_array_param
+end
+
+my_string = "pumpkins"
+my_array = ["pumpkins"]
+my_string, my_array = not_so_tricky_method(my_string, my_array)
+
+puts "My string looks like this now: #{my_string}"
+puts "My array looks like this now: #{my_array}"
+Every language (Ruby included) provides ways and means of writing "clever" code that depends on some of the less obvious traits of the language.
+
+Every good programmer practices these tricks...and then avoids them like the plague.
+
+Clever programmers don't write "clever" code. They write explicit code that is easy to read, debug and modify as the requirements change.
+
+4)Question 4
+
+A quick glance at the docs for the Ruby String class will have you scratching your head over the absence of any "word iterator" methods.
+
+Our natural inclination is to think of the words in a sentence as a collection. We would like to be able to operate on those words the same way we operate on the elements of an array. Where are the String#each_word and the String#map_words methods?
+
+A common idiom used to solve this conundrum is to use the String#split in conjunction with Array#join methods to break our string up and then put it back together again.
+
+Use this technique to break up the following string and put it back together with the words in reverse order:
+
+sentence = "Humpty Dumpty sat on a wall."
+
+
+A)sentence = "Humpty Dumpty sat on a wall."
+
+
+ def each_word(sentence)
+   return sentence.split
+ end
+
+ def join_word(sentence)
+   return sentence.join(" ")
+ end
+
+ p sentence = each_word(sentence)
+ p sentence = join_word(sentence)
+
+#correction
+
+words = sentence.split(/\W/)
+words.reverse!
+backwards_sentence = words.join(' ') + '.'
+
+5)What is the output of the following code?
+
+answer = 42
+
+def mess_with_it(some_number)
+  some_number += 8
+end
+
+new_answer = mess_with_it(answer)
+
+p answer - 8
+
+A) It's not mutating the integer - so the answer will be 34.
+
+
+6)

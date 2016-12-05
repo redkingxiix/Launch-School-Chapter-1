@@ -1,0 +1,3 @@
+The top one uses a symbol as a key
+
+  the bottom one uses a variable assignment

@@ -1,0 +1,9 @@
+The code should print:
+
+bob BOB
+
+First the variable name is assigned the string value of "bob".
+next the save_name variable is assigned the same value as name i.e. bob.
+the string method upcase! is called on name. As it is using an exclamation mark - it mutates the called, changing
+bob to BOB.
+

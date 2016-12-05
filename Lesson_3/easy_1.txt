@@ -1,0 +1,112 @@
+1)  What would you expect the below to print out?
+numbers = [1, 2, 2, 3]
+numbers.uniq
+
+puts numbers
+
+A) [1,2,2,3]
+
+2) Explain the difference between ! and ? in ruby. And what would happen in the following scenarios?
+
+The bang mark (!) indicates that the method mutates the caller or anything passed through it. Where the question mark indicates that it will return a true or false value based on what is passed through it.
+
+2.1) What is != and where should you use it?
+A) The != (not equal to) operator is the opposite of the == operator which returns true if both values are equal and false if they aren't.
+
+2.2) put ! before something like !user_name
+A) Returns true if not user_name or value not equal to that set to user_name
+
+2.3) put ! after somthing, like words.uniq!
+A) it mutates the array permanently.
+
+2.4) ? : before somthing
+A) ? : is a ternary operator - a short hand for else if
+
+4.5) ? after somthing
+A) returns a true or false value depending on the method preceeding the question mark.
+
+4.6) !! before something like username
+A) (correction) is used to turn any object into their boolean equivalent.
+
+3) Replace the word 'important' with urgent in this string:
+advice = "Few things in life are as important as house training your pet dinosaur."
+
+A) advice.sub("important","urgent")  #correction (advice.gsub!("important","urgent"))
+
+4)The Ruby Array class has several methods for removing items from the array. Two of them have very similar names. Let's see how they differ:
+
+numbers = [1, 2, 3, 4, 5]
+What do the following method calls do (assume we reset numbers to the original array between method calls)?
+
+numbers.delete_at(1)
+numbers.delete(1)
+
+A1) Deletes the value at index 1. In this case it would delete "2"
+A2) Deletes the value with the integer 1.
+
+5)Programmatically determine if 42 lies between 10 and 100.
+#uses the range model
+A) (1...100).to_a.include?(42) #correction (1...100).cover?(42)
+
+6)Starting with the string:
+
+famous_words = "seven years ago..."
+show two different ways to put the expected "Four score and " in front of it.
+
+A) famous_words + "seven years ago..."
+A2) famous_words << "seven years ago.."
+
+
+7)def add_eight(number)
+  number + 8
+end
+
+number = 2
+
+how_deep = "number"
+5.times { how_deep.gsub!("number", "add_eight(number)") }
+
+p how_deep
+This gives us a string that looks like a "recursive" method call:
+
+"add_eight(add_eight(add_eight(add_eight(add_eight(number)))))"
+If we take advantage of Ruby's Kernel#eval method to have it execute this string as if it were a "recursive" method call
+
+eval(how_deep)
+what will be the result?
+
+A)42
+
+
+8)If we build an array like this:
+
+flintstones = ["Fred", "Wilma"]
+flintstones << ["Barney", "Betty"]
+flintstones << ["BamBam", "Pebbles"]
+We will end up with this "nested" array:
+
+["Fred", "Wilma", ["Barney", "Betty"], ["BamBam", "Pebbles"]]
+Make this into an un-nested array.
+
+A) flintsones.flatten!
+
+9) Given the hash below
+
+flintstones = { "Fred" => 0, "Wilma" => 1, "Barney" => 2, "Betty" => 3, "BamBam" => 4, "Pebbles" => 5 }
+Turn this into an array containing only two elements: Barney's name and Barney's number
+
+A)flintstones = flintsones.flatten[4,2] #flintsones.asoc("Barney")
+
+
+10)Given the array below
+
+flintstones = ["Fred", "Barney", "Wilma", "Betty", "Pebbles", "BamBam"]
+Turn this array into a hash where the names are the keys and the values are the positions in the array.
+
+A)  empty_hash ={}
+flintstones.each_with_index do
+  empty[x] = 1
+end
+
+
+

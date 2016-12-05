@@ -1,0 +1,3 @@
+The programmer is trying to change the name variable - but there is no setter
+and no attr_writer/accessor. Only reader which allows the programmer to grab the 
+instance variable "name"

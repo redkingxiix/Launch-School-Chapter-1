@@ -1,0 +1,1 @@
+that syntax is similar to that of a hash. with arrays you need to specify the index
