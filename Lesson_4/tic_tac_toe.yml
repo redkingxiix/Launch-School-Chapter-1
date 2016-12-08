@@ -1,14 +1,19 @@
 en:
-  welcome:
-  rules:
-  win:
-  lose:
-  again:
-  goodbye:
+  language: 'Press 1 for English.　日本語設定のため[2]を記入してください。'
+  welcome: 'Welcome to tic tac toe! Press [1] for rules or [2] to play!'
+  wrong_answer1: 'Press [1] for rules or [2] to play!'
+  naught_or_cross: 'Would you like to be O or X? [1] for X or [2] for O'
+  rules: 'Enter a combonation of a, b or c and 1, 2 or 3. For example [a3]'
+  win: 'You win!'
+  lose: 'You lose!'
+  draw: 'Draw!'
+  again: 'Enter [1] for a rematch or [2] to quit'
+  goodbye: 'Thanks for playing'
 ja:
-  welcome:
-  rules:
-  win:
-  lose:
-  again:
-  goodbye:
+  welcome: '◯　X　ゲームへようこそ！ルールの説明のため[1]を入力し、ゲームを始まるため[2]を入力してください。'
+  wrong_answer1: 'ルールの説明のため[1]を入力し、ゲームを始まるため[2]を入力してください。'
+  rules: '英文字の a, b, c と数字の 1, 2, 3を入力して！ 例:[a3]'
+  win: 'プレイーヤの勝ちです！'
+  lose: 'コンピューターの勝ちです！'
+  again: 'もう一回やるなら、[1]を入力してください。止める場合、[2]を入力してください。'
+  goodbye: 'サヨウナラ！'
