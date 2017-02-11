@@ -35,19 +35,31 @@ def any_free_spaces?(board_data)
 end
 
 def winner?(board_data, xo)
+  winner = horizontal_win?(board_data, xo) || vertical_win?(board_data, xo) || diagonal_win?(board_data, xo)
+end
+
+def horizontal_win?(board_data, xo)
   winner = false
   WIN_CONDITION_ONE.each do |x|
     if board_data[x + '1'] == xo && board_data[x + '2'] == xo && board_data[x + '3'] == xo
-      winner = true
+     winner = true
     end
   end
+  winner
+end
 
-  WIN_CONDITION_TWO.each do |x|
+def vertical_win?(board_data, xo)
+  winner = false
+   WIN_CONDITION_TWO.each do |x|
     if board_data['a' + x] == xo && board_data['b' + x] == xo && board_data['c' + x] == xo
-      winner = true
+     winner = true
     end
   end
+  winner
+end
 
+def diagonal_win?(board_data, xo)
+  winner = false
   if board_data['a1'] == xo && board_data['b2'] == xo && board_data['c3'] == xo
     winner = true
   elsif board_data['c1'] == xo && board_data['b2'] == xo && board_data['a3'] == xo
