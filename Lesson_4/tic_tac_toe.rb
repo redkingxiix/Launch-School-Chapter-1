@@ -32,17 +32,18 @@ def any_free_spaces?(board_data)
   board_data.each do |k, _|
     return true if board_data[k].empty?
   end
+  false
 end
 
 def winner?(board_data, xo)
-  winner = horizontal_win?(board_data, xo) || vertical_win?(board_data, xo) || diagonal_win?(board_data, xo)
+  horizontal_win?(board_data, xo) || vertical_win?(board_data, xo) || diagonal_win?(board_data, xo)
 end
 
 def horizontal_win?(board_data, xo)
   winner = false
   WIN_CONDITION_ONE.each do |x|
     if board_data[x + '1'] == xo && board_data[x + '2'] == xo && board_data[x + '3'] == xo
-     winner = true
+      winner = true
     end
   end
   winner
@@ -50,9 +51,9 @@ end
 
 def vertical_win?(board_data, xo)
   winner = false
-   WIN_CONDITION_TWO.each do |x|
+  WIN_CONDITION_TWO.each do |x|
     if board_data['a' + x] == xo && board_data['b' + x] == xo && board_data['c' + x] == xo
-     winner = true
+      winner = true
     end
   end
   winner
@@ -78,12 +79,19 @@ def print_board(board_data)
 end
 
 def computer_turn(board_data)
-  computer = ""
+  computer = calculate_empty_spaces(board_data)
   loop do
-    computer = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3'].sample
-   break if empty_or_valid_choice?(computer, board_data)
+    break if empty_or_valid_choice?(computer.sample, board_data)
   end
-  choice(computer, board_data, "X")
+  choice(computer.sample, board_data, "X")
+end
+
+def calculate_empty_spaces(board_data)
+  computer_choices = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3']
+  computer_choices.select do |x|
+    next unless board_data[x] == ''
+    x
+  end
 end
 
 input = ''
@@ -130,12 +138,12 @@ while play_again
     player_choice = gets.chomp
 
     while !choice(player_choice, board_data, "O")
-      prompt(message('invalid',lang))
+      prompt(message('invalid', lang))
       player_choice = gets.chomp
     end
 
+    break if winner?(board_data, 'X') || winner?(board_data, 'O') || !any_free_spaces?(board_data)
     computer_turn(board_data)
-    break if winner?(board_data, 'X') || winner?(board_data, 'O')
   end
 
   print_board(board_data)
