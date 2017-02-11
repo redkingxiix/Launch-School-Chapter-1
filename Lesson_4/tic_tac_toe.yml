@@ -9,6 +9,7 @@ en:
   draw: 'Draw!'
   again: 'Enter [1] for a rematch or [2] to quit'
   goodbye: 'Thanks for playing'
+  invalid: 'Not a valid choice! Try again!'
 ja:
   welcome: '◯　X　ゲームへようこそ！ルールの説明のため[1]を入力し、ゲームを始まるため[2]を入力してください。'
   wrong_answer1: 'ルールの説明のため[1]を入力し、ゲームを始まるため[2]を入力してください。'
@@ -17,3 +18,4 @@ ja:
   lose: 'コンピューターの勝ちです！'
   again: 'もう一回やるなら、[1]を入力してください。止める場合、[2]を入力してください。'
   goodbye: 'サヨウナラ！'
+  invalid: '違法のムーブです！もう一回入力してください！'
