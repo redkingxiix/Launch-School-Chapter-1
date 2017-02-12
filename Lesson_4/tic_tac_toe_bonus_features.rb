@@ -1,3 +1,4 @@
+require 'pry'
 INITIAL_MARKER = ' '
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -62,7 +63,23 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
+  square = '#'
+  WINNING_LINES.each do |line|
+    if brd.values_at(*line).count(PLAYER_MARKER) == 2
+      line.each do |value|
+        next unless brd[value] == INITIAL_MARKER
+        square = value
+        break
+      end
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 2
+      line.each do |value|
+        next unless brd[value] == INITIAL_MARKER
+        square = value
+        break
+      end
+    end
+  end
+  square = empty_squares(brd).sample unless square.is_a? Numeric
   brd[square] = COMPUTER_MARKER
 end
 
@@ -114,7 +131,7 @@ loop do
 
   prompt "The score is You: #{player_score} | Computer: #{computer_score}"
   break if (computer_score == 5) ||
-           (player_score == 5) 
+           (player_score == 5)
   prompt "Play again? (y or n)"
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
