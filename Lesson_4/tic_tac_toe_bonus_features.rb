@@ -63,6 +63,13 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
+  square = computer_offensive_move(brd)
+  square = computer_defensive_move(brd) unless square.is_a? Numeric
+  square = empty_squares(brd).sample unless square.is_a? Numeric
+  brd[square] = COMPUTER_MARKER
+end
+
+def computer_defensive_move(brd)
   square = '#'
   WINNING_LINES.each do |line|
     if brd.values_at(*line).count(PLAYER_MARKER) == 2
@@ -71,7 +78,15 @@ def computer_places_piece!(brd)
         square = value
         break
       end
-    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 2
+    end
+  end
+  square
+end
+
+def computer_offensive_move(brd)
+  square = "#"
+  WINNING_LINES.each do |line|
+    if brd.values_at(*line).count(COMPUTER_MARKER) == 2
       line.each do |value|
         next unless brd[value] == INITIAL_MARKER
         square = value
@@ -79,8 +94,7 @@ def computer_places_piece!(brd)
       end
     end
   end
-  square = empty_squares(brd).sample unless square.is_a? Numeric
-  brd[square] = COMPUTER_MARKER
+  square
 end
 
 def board_full?(brd)
