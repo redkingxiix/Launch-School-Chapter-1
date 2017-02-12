@@ -65,8 +65,14 @@ end
 def computer_places_piece!(brd)
   square = computer_offensive_move(brd)
   square = computer_defensive_move(brd) unless square.is_a? Numeric
+  square = computer_center_move(brd) unless square.is_a? Numeric
   square = empty_squares(brd).sample unless square.is_a? Numeric
   brd[square] = COMPUTER_MARKER
+end
+
+def computer_center_move(brd)
+  square = '#' if brd[5] != INITIAL_MARKER
+  square = 5
 end
 
 def computer_defensive_move(brd)
