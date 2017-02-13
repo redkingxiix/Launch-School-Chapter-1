@@ -5,9 +5,18 @@ COMPUTER_MARKER = 'O'
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # cols
                 [[1, 5, 9], [3, 5, 7]] # diags
+CHOOSE = ['choose', 'player', 'computer']
 
 def prompt(msg)
   puts "=> #{msg}"
+end
+
+def choose(choice)
+  if choice == "p"
+    1
+  elsif choice == 'c'
+    2
+  end
 end
 
 # rubocop:disable Metrics/AbcSize
@@ -47,6 +56,21 @@ def initialize_board
   new_board
 end
 
+def place_piece!(brd, player)
+  if player == 'player'
+    player_places_piece!(brd)
+  else
+    computer_places_piece!(brd)
+  end
+end
+
+def alternate_player(plr)
+  case plr
+  when 'player' then 'computer'
+  when 'computer' then 'player'
+  end
+end
+
 def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
@@ -63,44 +87,43 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = computer_offensive_move(brd)
-  square = computer_defensive_move(brd) unless square.is_a? Numeric
-  square = computer_center_move(brd) unless square.is_a? Numeric
-  square = empty_squares(brd).sample unless square.is_a? Numeric
+  return if computer_offensive_move(brd)
+  return if computer_defensive_move(brd)
+  return if computer_center_move(brd)
+  square = empty_squares(brd).sample
   brd[square] = COMPUTER_MARKER
 end
 
 def computer_center_move(brd)
-  square = '#' if brd[5] != INITIAL_MARKER
-  square = 5
+  return false if brd[5] != INITIAL_MARKER
+  brd[5] = COMPUTER_MARKER
+  true
 end
 
 def computer_defensive_move(brd)
-  square = '#'
   WINNING_LINES.each do |line|
     if brd.values_at(*line).count(PLAYER_MARKER) == 2
       line.each do |value|
         next unless brd[value] == INITIAL_MARKER
-        square = value
-        break
+        brd[value] = COMPUTER_MARKER
+        return true
       end
     end
   end
-  square
+  false
 end
 
 def computer_offensive_move(brd)
-  square = "#"
   WINNING_LINES.each do |line|
     if brd.values_at(*line).count(COMPUTER_MARKER) == 2
       line.each do |value|
         next unless brd[value] == INITIAL_MARKER
-        square = value
-        break
+        brd[value] = COMPUTER_MARKER
+        return true
       end
     end
   end
-  square
+  false
 end
 
 def board_full?(brd)
@@ -124,16 +147,28 @@ end
 
 player_score = 0
 computer_score = 0
+current_player = ''
+starter = ''
+prompt("Who will go first? Type 'c' or Computer or 'p' for Player:")
+
+loop do
+  starter = gets.chomp
+  if starter.downcase.start_with?('p', 'c')
+    starter = choose(starter)
+    current_player = CHOOSE[starter]
+    break
+  else
+    prompt('Invalid choice. Type "c" for Computer or "p" for Player')
+  end
+end
 
 loop do
   board = initialize_board
 
   loop do
     display_board(board)
-    player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
-
-    computer_places_piece!(board)
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
     break if someone_won?(board) || board_full?(board)
   end
 
