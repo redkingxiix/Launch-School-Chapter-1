@@ -2,13 +2,14 @@ require 'pry'
 HIGH_CARDS = ['Jack','Queen','King']
 player_hand = []
 dealer_hand = []
+SUITS = {'H' => 'Hearts', 'D' => 'Diamonds', 'C' => 'Clubs', 'S' => 'Spades'}
 
 def prompt(message)
 p ("=>#{message}")
 end
 
 def initialize_deck
-  suits = ['S','D','H','C']
+  suits = SUITS.keys
   deck = []
   suits.map{|suit|
     cards= []
@@ -56,8 +57,7 @@ def calculate(hand)
     value = 0
     if HIGH_CARDS.any? do |face| face == card_value end
       value = 10
-    elsif
-      card_value = 'Ace'
+    elsif card_value == 'Ace'
       ace_counter += 1
     else
       value = card_value.to_i
@@ -77,9 +77,9 @@ def calculate(hand)
   end
 end
 
-def deal_cards(deck)
+def deal_cards(deck, no)
   hand = []
-  2.times do 
+  no.times do 
     card = deck.sample
     hand << card
     deck.delete(card)
@@ -87,9 +87,43 @@ def deal_cards(deck)
   hand
 end
 
-loop do
-  
+def show_cards(p_hand)
+  hand = []
+  value = ''
+  punc = ''
+  suit = '' 
+  p_hand.each do |card|
+   value = card[1]
+   suit = SUITS[card[0]]
+   punc = value == 'Ace' ? 'an' : 'a'
+   hand << "#{punc} #{value} of #{suit}"
+  end
+  prompt("You have #{joinor(hand, ',')}") 
 end
 
-deck =  initialize_deck
-player_hand = deal_cards(deck)
+def joinor(arr, punc, con = 'and') # array, punctuation, connective
+  if arr.size <= 1
+    return arr.first.to_s
+  elsif arr.size == 2
+    return arr.insert(1, con).join(' ')
+  else
+    last_digit = arr.pop.to_s
+    con = ' '+con+' '
+    return new_sentence = arr.join("#{punc}") << con << last_digit
+  end
+end
+
+prompt('Welcome to Blackjack!')  
+loop do
+  loop do
+    deck = initialize_deck
+
+    player_hand = deal_cards(deck, 2)
+    dealer_hand = deal_cards(deck, 2)
+    show_cards(player_hand)
+    binding.pry
+  end
+  prompt('Would you like to play again?')
+  answer = gets.chomp
+  break if answer.downcase.start_with?('y')
+end
