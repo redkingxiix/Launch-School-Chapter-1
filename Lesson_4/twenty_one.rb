@@ -66,7 +66,7 @@ def calculate(hand)
   end
 
   ace_counter.times do
-    total_value + 11
+    total_value += 11
   end
 
   if total_value > 21
@@ -75,10 +75,15 @@ def calculate(hand)
       break if total_value < 21
     end
   end
+  total_value
 end
 
-def deal_cards(deck, no)
-  hand = []
+def bust(value)
+  return value > 21
+end
+
+def deal_cards(deck, hand = [])
+  no = hand.length == 0 ? 2 : 1
   no.times do
     card = deck.sample
     hand << card
@@ -87,15 +92,25 @@ def deal_cards(deck, no)
   hand
 end
 
-def show_cards(p_hand)
+def show_cards(p_hand, player = true)
   hand = []
-  p_hand.each do |card|
+  p_hand.each_with_index do |card, index|
     value = card[1]
     suit = SUITS[card[0]]
-    punc = value == 'Ace' ? 'an' : 'a'
+    punc = ['Ace', '8'].include?(value) ? 'an' : 'a'
     hand << "#{punc} #{value} of #{suit}"
+    break if !player && index >= 1
   end
-  prompt("You have #{joinor(hand, ',')}")
+  if player
+    prompt("You have #{joinor(hand, ',')}.")
+    prompt("Your total value is: #{calculate(p_hand)}.")
+  else
+    dealer_hand = []
+    dealer_hand << hand.first
+    other_cards = p_hand.length > 2 ?  "and #{p_hand.count} cards.": "and another card."
+    dealer_text = "Dealer has #{joinor(dealer_hand, ' , ')} #{other_cards}"
+    prompt(dealer_text)
+  end
 end
 
 def joinor(arr, punc, con = 'and') # array, punctuation, connective
@@ -113,13 +128,19 @@ end
 
 prompt('Welcome to Blackjack!')
 loop do
+  deck = initialize_deck
+  player_hand = deal_cards(deck)
+  dealer_hand = deal_cards(deck)
   loop do
-    deck = initialize_deck
-    player_hand = deal_cards(deck, 2)
-    dealer_hand = deal_cards(deck, 2)
+    player_hand = deal_cards(deck, player_hand)
+    dealer_hand = deal_cards(deck, dealer_hand)
     show_cards(player_hand)
+    show_cards(dealer_hand, false)
+    value = calculate(player_hand)
+    d_value = calculate(dealer_hand)
+    break if bust(value) || bust(d_value)
   end
   prompt('Would you like to play again?')
   answer = gets.chomp
-  break if answer.downcase.start_with?('y')
+  break unless answer.downcase.start_with?('y')
 end
