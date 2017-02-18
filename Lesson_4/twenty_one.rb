@@ -78,8 +78,18 @@ def calculate(hand)
   total_value
 end
 
-def bust(value)
-  return value > 21
+def bust(val)
+  val > 21
+end
+
+def who_won?(p_val, d_val)
+  return 'You win!' if d_val > 21
+  return 'Dealer wins!' if p_val > 21
+  if p_val > d_val
+    return 'You win!'
+  else
+    return 'Dealer wins!'
+  end
 end
 
 def deal_cards(deck, hand = [])
@@ -92,8 +102,9 @@ def deal_cards(deck, hand = [])
   hand
 end
 
-def show_cards(p_hand, player = true)
+def show_cards(p_hand, player = true, show_down = false)
   hand = []
+  who = show_down ? "Dealer's" : 'Your'
   p_hand.each_with_index do |card, index|
     value = card[1]
     suit = SUITS[card[0]]
@@ -101,9 +112,9 @@ def show_cards(p_hand, player = true)
     hand << "#{punc} #{value} of #{suit}"
     break if !player && index >= 1
   end
-  if player
-    prompt("You have #{joinor(hand, ',')}.")
-    prompt("Your total value is: #{calculate(p_hand)}.")
+  if player || show_down
+    prompt("#{who} hand: #{joinor(hand, ',')}.")
+    prompt("#{who} total value: #{calculate(p_hand)}.")
   else
     dealer_hand = []
     dealer_hand << hand.first
@@ -126,20 +137,52 @@ def joinor(arr, punc, con = 'and') # array, punctuation, connective
   end
 end
 
+def dealer_should_stick?(val) 
+  return false if val < 16
+  true
+end
+
 prompt('Welcome to Blackjack!')
 loop do
   deck = initialize_deck
   player_hand = deal_cards(deck)
   dealer_hand = deal_cards(deck)
+  dealer_stuck = false
+  player_stuck = false
+  d_val = 0
+  p_val = 0
+  show_cards(player_hand)
+  show_cards(dealer_hand, false)
+ 
   loop do
-    player_hand = deal_cards(deck, player_hand)
+    d_value = calculate(dealer_hand)
     dealer_hand = deal_cards(deck, dealer_hand)
+    unless dealer_should_stick?(d_value) || dealer_stuck
+      dealer_hand = deal_cards(deck, dealer_hand)
+    end
+    unless player_stuck
+      answer = ''
+      loop do
+        prompt('Would you like to stick? "y" for yes, "n" for no.')
+        answer = gets.chomp.downcase
+        break if answer == 'y'|| answer == 'n'
+      end
+      if answer == 'n'
+        player_hand = deal_cards(deck, player_hand)
+      else
+        player_stuck = true
+      end
+    end
     show_cards(player_hand)
     show_cards(dealer_hand, false)
-    value = calculate(player_hand)
-    d_value = calculate(dealer_hand)
-    break if bust(value) || bust(d_value)
+    p_val  = calculate(player_hand)
+    d_val = calculate(dealer_hand)
+    system 'clear'
+    break if bust(p_val) || bust(d_val) || (player_stuck && dealer_stuck)
   end
+  show_cards(player_hand)
+  show_cards(dealer_hand, false, true)
+  prompt(who_won?(p_val, d_val))
   prompt('Would you like to play again?')
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
