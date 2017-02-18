@@ -78,6 +78,13 @@ def play_again?
   answer.downcase.start_with?('y')
 end
 
+def grand_output(d_cards, p_cards, d_score, p_score)
+  puts "=============="
+  prompt "Dealer has #{d_cards}, for a total of: #{d_score}"
+  prompt "Player has #{p_cards}, for a total of: #{p_score}"
+  puts "=============="
+end
+
 loop do
   prompt "Welcome to Twenty-One!"
 
@@ -121,6 +128,7 @@ loop do
   end
 
   if busted?(player_cards)
+    grand_output(dealer_score, player_score, dealer_cards, player_cards)
     display_result(dealer_cards, player_cards)
     play_again? ? next : break
   else
@@ -141,6 +149,7 @@ loop do
 
   if busted?(dealer_cards)
     prompt "Dealer total is now: #{dealer_score}"
+    grand_output(dealer_score, player_score, dealer_cards, player_cards)
     display_result(dealer_cards, player_cards)
     play_again? ? next : break
   else
@@ -148,13 +157,10 @@ loop do
   end
 
   # both player and dealer stays - compare cards!
-  puts "=============="
-  prompt "Dealer has #{dealer_cards}, for a total of: #{dealer_score}"
-  prompt "Player has #{player_cards}, for a total of: #{player_score}"
-  puts "=============="
-
+  grand_output(dealer_score, player_score, dealer_cards, player_cards)
   display_result(dealer_cards, player_cards)
-
+  #this play again is different because it come naturally at the end of the loop. it also uses
+  #an unless statement where as the other two use the method as a tenery operator
   break unless play_again?
 end
 
