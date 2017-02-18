@@ -1,5 +1,8 @@
+require 'pry'
 SUITS = ['H', 'D', 'S', 'C']
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+player_tally = 0
+dealer_tally = 0
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -60,22 +63,42 @@ def display_result(dealer_cards, player_cards)
   case result
   when :player_busted
     prompt "You busted! Dealer wins!"
+    true
   when :dealer_busted
     prompt "Dealer busted! You win!"
+    false
   when :player
     prompt "You win!"
+    true
   when :dealer
     prompt "Dealer wins!"
+    false
   when :tie
     prompt "It's a tie!"
   end
 end
 
-def play_again?
+def tally_reached?(p_tally, d_tally)
+  if p_tally == 5
+    prompt('Congratulations! You got five wins!')
+    true
+  elsif d_tally == 5
+    prompt('Oh no! the dealer got five wins...!')
+    true
+  else
+    false
+  end
+end
+
+def play_again?(p_tally, d_tally)
+  unless tally_reached?(p_tally, d_tally)
   puts "-------------"
   prompt "Do you want to play again? (y or n)"
   answer = gets.chomp
   answer.downcase.start_with?('y')
+  else
+    false
+  end
 end
 
 def grand_output(d_cards, p_cards, d_score, p_score)
@@ -87,6 +110,7 @@ end
 
 loop do
   prompt "Welcome to Twenty-One!"
+  prompt "The current tally is  You: #{player_tally} : Dealer #{dealer_tally}"
 
   # initialize vars
   deck = initialize_deck
@@ -130,7 +154,8 @@ loop do
   if busted?(player_cards)
     grand_output(dealer_score, player_score, dealer_cards, player_cards)
     display_result(dealer_cards, player_cards)
-    play_again? ? next : break
+    dealer_tally+=1
+    play_again?(player_tally, dealer_tally) ? next : break
   else
     prompt "You stayed at #{player_score}"
   end
@@ -151,17 +176,21 @@ loop do
     prompt "Dealer total is now: #{dealer_score}"
     grand_output(dealer_score, player_score, dealer_cards, player_cards)
     display_result(dealer_cards, player_cards)
-    play_again? ? next : break
+    player_tally += 1
+    play_again?(player_tally, dealer_tally) ? next : break
   else
     prompt "Dealer stays at #{dealer_score}"
   end
 
   # both player and dealer stays - compare cards!
   grand_output(dealer_score, player_score, dealer_cards, player_cards)
-  display_result(dealer_cards, player_cards)
+  tally = display_result(dealer_cards, player_cards)
+  unless tally.nil?
+    tally ? player_tally+=1 : dealer_tally+=1
+  end
   #this play again is different because it come naturally at the end of the loop. it also uses
   #an unless statement where as the other two use the method as a tenery operator
-  break unless play_again?
+  break unless play_again?(player_tally, dealer_tally)
 end
 
 prompt "Thank you for playing Twenty-One! Good bye!"
